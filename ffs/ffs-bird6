@@ -1,0 +1,19 @@
+#!/bin/sh
+echo "show status
+show ospf interface" |
+birdc6 |
+awk 'BEGIN {status="down";
+    dr="none"
+    bdr="none"}
+  /Daemon is up and running/ {status="running"}
+  /^Router ID is / {routerid=$4}
+  $1 == "Designed" && $2 == "router" && $3 == "(ID):" { dr=$4 }
+  $1 == "Backup" && $2 == "designed" && $3 == "router" && $4 == "(ID):" { bdr=$5 }
+  END {
+    printf("Status: %s RouterID: %s DR: %s BDR: %s\n",status,routerid,dr,bdr)
+    if (dr=="none" && bdr=="none") { exitcode=2; }
+    else if (dr=="none" || bdr=="none") { exitcode=1; }
+    else { exitcode=0; }
+    exit exitcode
+  }
+'
