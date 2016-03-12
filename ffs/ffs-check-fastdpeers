@@ -6,10 +6,34 @@
 
 # programs
 STATUSPL="/etc/check_mk/ffs/status.pl"
-FASTDSOCKET="/var/run/fastd-ffs.status"
+FASTDSOCKET="/var/run/fastd-vpn00.sock"
 JSONPARSE="/usr/bin/jq"
+export LC_ALL=C
+export LANG=C
 
 [ -e /etc/default/ffs-check-fastdpeers ] && . /etc/default/ffs-check-fastdpeers
+
+print_help() {
+  usage: $0 [--fastdsocket=/var/run/fastd/fastd-vpn00.sock]
+  cat <<EOF >&2
+--help:		Dieser Text
+--fastdsocket:	Socket zum betreffenden fastd
+EOF
+A
+}
+if [ "x" != "x$1" ]; then
+TEMP=`getopt -o h --long help,fastdsocket: -- "$@"`
+if [ $? != 0 ] ; then print_help >&2 ; exit 1 ; fi
+eval set -- "$TEMP"
+while true ; do
+  case "$1" in
+    --fastdsocket)	FASTDSOCKET="$2"; shift 2;;
+    --help|-h)		print_help; exit 1;;
+    --) shift ; break ;;
+    *) echo "Unknown parameter $1, try -h" ; exit 1 ;;
+  esac
+done
+fi
 
 STATUSOUT=$($STATUSPL $FASTDSOCKET)
 # Anzahl der Verbundenen Peers
