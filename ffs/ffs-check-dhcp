@@ -6,7 +6,7 @@
 #
 
 # Internes Interface von ffs
-IFACE="ffs-br"
+IFACE="br00"
 # IP des aktuellen GWs herausfinden
 DHCPSRVIP=$(ip addr show scope global $IFACE | grep 172.21 | awk -F"/" ' {print $1}' | sed -e "s/inet//" | sed -e "s/ //g")
 # Timeout für die DHCP Abfrage

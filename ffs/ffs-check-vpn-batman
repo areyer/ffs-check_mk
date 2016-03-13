@@ -44,7 +44,7 @@ iface_exists=false
 ip a l dev "$vpn_iface" > /dev/null 2>&1 && iface_exists=true
 
 batman_gateway=false
-$BATCTL gw | grep ^server > /dev/null 2>&1 && batman_gateway=true
+$BATCTL -m bat00 gw | grep ^server > /dev/null 2>&1 && batman_gateway=true
 
 CURLOUT=$(curl -s --insecure --interface "$vpn_iface" https://checkip.perfect-privacy.com/json)
 pp_ok=$(ip a l | grep -q $($JSONPARSE .IP <<<$CURLOUT | tr '"' ' ') || echo true)

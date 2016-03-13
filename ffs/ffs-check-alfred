@@ -1,0 +1,21 @@
+#/bin/bash
+export LC_ALL=C
+print_help() {
+  cat <<EOF >&2 
+  usage: $0 [--interface=bat00]
+--help:         Dieser Text
+--interface:  alfred Interface
+EOF
+}
+TEMP=`getopt -o h --long help,interface: -- "$@"`
+if [ $? != 0 ] ; then print_help >&2 ; exit 1 ; fi
+eval set -- "$TEMP"
+while true ; do
+  case "$1" in
+    --interface)      INTERFACE="$2"; shift 2;;
+    --help|-h)          print_help; exit 1;;
+    --) shift ; break ;;
+    *) echo "Unknown parameter $1, try -h" ; exit 1 ;;
+  esac
+done
+ps ax | awk 'BEGIN {a=1} $5 ~ /alfred/ && $0 ~ /'"$INTERFACE.*$INTERFACE.*$INTERFACE"'/ { a=0; exit 0} END {exit a}'

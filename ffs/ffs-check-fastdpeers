@@ -19,7 +19,6 @@ print_help() {
 --help:		Dieser Text
 --fastdsocket:	Socket zum betreffenden fastd
 EOF
-A
 }
 if [ "x" != "x$1" ]; then
 TEMP=`getopt -o h --long help,fastdsocket: -- "$@"`
